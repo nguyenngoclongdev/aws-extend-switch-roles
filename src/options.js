@@ -88,7 +88,7 @@ window.onload = function() {
   }
 
   elById('configStorageSyncRadioButton').onchange = elById('configStorageLocalRadioButton').onchange = function() {
-    configStorageArea = this.value;
+    // configStorageArea = this.value;
     syncStorageRepo.set({ configStorageArea: this.value }).then(() => {
       saveButton.click();
     });
@@ -111,7 +111,7 @@ window.onload = function() {
       elById(`${key}CheckBox`).checked = data[key] || false;
     }
 
-    configStorageArea = data.configStorageArea || 'local'
+    // configStorageArea = data.configStorageArea || 'local'
     switch (configStorageArea) {
       case 'sync':
         elById('configStorageSyncRadioButton').checked = true
