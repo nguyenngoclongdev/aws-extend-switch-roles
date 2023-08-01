@@ -29,4 +29,3 @@ jobs:
               with:
                   files: |
                     dist/chrome/aws-extend-switch-roles.zip
-                    dist/firefox/aws-extend-switch-roles.zip
