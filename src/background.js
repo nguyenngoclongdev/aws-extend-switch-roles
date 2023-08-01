@@ -92,7 +92,7 @@ chrome.runtime.onMessageExternal.addListener(function (message, sender, sendResp
 
   syncStorageRepo.get(['configSenderId', 'configStorageArea'])
   .then(settings => {
-    const configStorageArea = settings.configStorageArea || 'sync';
+    const configStorageArea = settings.configStorageArea || 'local';
     const configSenderIds = (settings.configSenderId || '').split(',');
 
     if (configSenderIds.includes(sender.id)) {
