@@ -1,7 +1,7 @@
 export class StorageRepository {
   constructor(browser, storageArea) {
     this.runtime = browser.runtime
-    this.storageArea = browser.storage['local'] // force using local storage
+    this.storageArea = browser.storage[storageArea]
   }
 
   async get(keys) {
@@ -27,7 +27,8 @@ export class StorageRepository {
 
 export class SyncStorageRepository extends StorageRepository {
   constructor(browser) {
-    super(browser, 'sync')
+    // super(browser, 'sync')
+    super(browser, 'local') // force using local storage
   }
 }
 
