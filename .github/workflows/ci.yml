@@ -21,8 +21,7 @@ jobs:
 
             - name: Bundle package
               run: |
-               ./bin/build.sh
-               ./bin/archive.sh
+               npm run archive
 
             - name: Create Release
               uses: softprops/action-gh-release@v1
