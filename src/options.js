@@ -12,7 +12,7 @@ const syncStorageRepo = new SyncStorageRepository(chrome || browser)
 const sessionMemory = new SessionMemory(chrome || browser)
 
 window.onload = function() {
-  let configStorageArea = 'sync';
+  let configStorageArea = 'local';
   let colorPicker = new ColorPicker(document);
 
   let selection = [];
@@ -87,12 +87,12 @@ window.onload = function() {
     syncStorageRepo.set({ configSenderId: this.value });
   }
 
-  elById('configStorageSyncRadioButton').onchange = elById('configStorageLocalRadioButton').onchange = function() {
-    configStorageArea = this.value;
-    syncStorageRepo.set({ configStorageArea: this.value }).then(() => {
-      saveButton.click();
-    });
-  }
+  // elById('configStorageSyncRadioButton').onchange = elById('configStorageLocalRadioButton').onchange = function() {
+  //   configStorageArea = this.value;
+  //   syncStorageRepo.set({ configStorageArea: this.value }).then(() => {
+  //     saveButton.click();
+  //   });
+  // }
 
   elById('defaultVisualRadioButton').onchange = elById('lightVisualRadioButton').onchange = elById('darkVisualRadioButton').onchange = function() {
     const visualMode = this.value;
