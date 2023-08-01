@@ -1,0 +1,32 @@
+name: ci
+
+on:
+    push:
+        tags:
+            - 'v*.*.*'
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - uses: actions/setup-node@v2
+              with:
+               node-version: '14'
+
+            - name: Install Dependency
+              run: |
+               npm install
+
+            - name: Bundle package
+              run: |
+               ./bin/build.sh
+               ./bin/archive.sh
+
+            - name: Create Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  files: |
+                    dist/chrome/aws-extend-switch-roles.zip
+                    dist/firefox/aws-extend-switch-roles.zip

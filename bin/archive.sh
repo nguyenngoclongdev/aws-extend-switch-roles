@@ -5,7 +5,7 @@
 zipfile=aws-extend-switch-roles.zip
 
 cd dist/chrome;
-\rm $zipfile
+\rm -f $zipfile
 zip -r $zipfile \
   manifest.json *.html icons/ js/ 
 echo "archived: chrome/$zipfile"
@@ -13,7 +13,7 @@ echo "archived: chrome/$zipfile"
 echo "----"
 
 cd ../firefox;
-\rm $zipfile
+\rm -f $zipfile
 zip -r $zipfile \
   manifest.json *.html icons/ js/ 
 
