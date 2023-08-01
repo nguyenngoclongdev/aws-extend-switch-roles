@@ -43,15 +43,15 @@ function saveAwsConfig(data, callback, storageRepo) {
 function initScript() {
   sessionMemory.set({ switchCount: 0 }).then(() => {});
 
-  syncStorageRepo.get(['goldenKeyExpire'])
-  .then(data => {
-    const { goldenKeyExpire } = data;
-    if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
-      return sessionMemory.set({ hasGoldenKey: 't' }).then(() => {
-        return setIcon('/icons/Icon_48x48_g.png');
-      });
-    }
-  })
+  // syncStorageRepo.get(['goldenKeyExpire'])
+  // .then(data => {
+  //   const { goldenKeyExpire } = data;
+  //   if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
+  //     return sessionMemory.set({ hasGoldenKey: 't' }).then(() => {
+  //       return setIcon('/icons/Icon_48x48_g.png');
+  //     });
+  //   }
+  // })
 }
 
 chrome.runtime.onStartup.addListener(function () { initScript() })

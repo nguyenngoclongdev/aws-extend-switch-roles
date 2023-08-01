@@ -3,7 +3,7 @@ const autoAssumeLastRole = new AutoAssumeLastRole();
 function extendIAMFormList() {
   const lastRoleKey = autoAssumeLastRole.createKey();
 
-  chrome.storage.sync.get([
+  chrome.storage.local.get([
     'profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4',
     'hidesAccountId', 'showOnlyMatchingRoles',
     'autoAssumeLastRole', lastRoleKey
