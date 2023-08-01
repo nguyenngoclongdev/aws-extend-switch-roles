@@ -114,7 +114,7 @@ function loadFormList(curURL, userInfo, tabId) {
   .then(data => {
     const hidesAccountId = data.hidesAccountId || false;
     const showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
-    const configStorageArea = data.configStorageArea || 'sync';
+    const configStorageArea = data.configStorageArea || 'local';
     const signinEndpointInHere = data.signinEndpointInHere || false;
 
     new StorageRepository(chrome || browser, configStorageArea).get(['profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4'])
