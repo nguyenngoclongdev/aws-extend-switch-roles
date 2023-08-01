@@ -111,7 +111,7 @@ window.onload = function() {
       elById(`${key}CheckBox`).checked = data[key] || false;
     }
 
-    configStorageArea = data.configStorageArea || 'sync'
+    configStorageArea = data.configStorageArea || 'local'
     switch (configStorageArea) {
       case 'sync':
         elById('configStorageSyncRadioButton').checked = true
