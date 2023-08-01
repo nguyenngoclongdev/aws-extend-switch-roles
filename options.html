@@ -136,11 +136,11 @@ code {
     <li><label for="showOnlyMatchingRolesCheckBox"><input type="checkbox" id="showOnlyMatchingRolesCheckBox">Show only matching roles</label></li>
     <li><label for="signinEndpointInHereCheckBox"><input type="checkbox" id="signinEndpointInHereCheckBox">Sign-in endpoint in current region</label> (Experimental, Supporters only) </li>
     <li><s><label for="autoAssumeLastRoleCheckBox"><input type="checkbox" id="autoAssumeLastRoleCheckBox">Automatically assume last assumed role</label> (Experimental) </s> (temporarily disabled) </li>
-    <!-- <li>
+    <li>
       Configuration storage:
-      <label for="configStorageSyncRadioButton"><input type="radio" name="configStorage" id="configStorageSyncRadioButton" value="sync">Sync</label>
-      <label for="configStorageLocalRadioButton"><input type="radio" name="configStorage" id="configStorageLocalRadioButton" value="local">Local</label>
-    </li> -->
+      <label for="configStorageSyncRadioButton"><input type="radio" name="configStorage" id="configStorageSyncRadioButton" value="sync" disabled>Sync</label>
+      <label for="configStorageLocalRadioButton"><input type="radio" name="configStorage" id="configStorageLocalRadioButton" value="local" disabled checked>Local</label>
+    </li>
     <li>
       Visual mode:
       <label for="defaultVisualRadioButton"><input type="radio" name="visual" id="defaultVisualRadioButton" value="default">Browser default</label>
@@ -149,13 +149,13 @@ code {
     </li>
   </ul>
  </section>
- <!-- <section id="api">
+ <section id="api">
   <h1>Extension API</h1>
   <div>
    <label for="configSenderIdText">Config sender extension ID:</label>
-   <input id="configSenderIdText" type="text" maxlength="48" style="width: 48ex">
+   <input id="configSenderIdText" type="text" maxlength="48" style="width: 48ex" disabled>
   </div>
- </section> -->
+ </section>
 </div>
 <div class="pane" id="howto">
  <h2>How to configure</h2>

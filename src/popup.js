@@ -57,10 +57,10 @@ window.onload = function() {
     return false;
   }
 
-  document.getElementById('openSupportersLink').onclick = document.getElementById('openSupportMe').onclick = function(e) {
-    chrome.tabs.create({ url: chrome.runtime.getURL('supporters.html')}, function(tab){});
-    return false;
-  }
+  // document.getElementById('openSupportersLink').onclick = document.getElementById('openSupportMe').onclick = function(e) {
+  //   chrome.tabs.create({ url: chrome.runtime.getURL('supporters.html')}, function(tab){});
+  //   return false;
+  // }
 
   const storageRepo = new SyncStorageRepository(chrome || browser);
   storageRepo.get(['visualMode']).then(({ visualMode }) => {
