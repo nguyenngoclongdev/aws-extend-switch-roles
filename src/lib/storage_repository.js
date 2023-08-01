@@ -1,7 +1,7 @@
 export class StorageRepository {
   constructor(browser, storageArea) {
     this.runtime = browser.runtime
-    this.storageArea = browser.storage[storageArea]
+    this.storageArea = browser.storage['local'] // force using local storage
   }
 
   async get(keys) {
