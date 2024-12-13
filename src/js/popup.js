@@ -1,42 +1,40 @@
-import { createRoleListItem } from './lib/create_role_list_item.js'
-import { createProfileSet } from './lib/profile_set.js'
-import { DataProfilesSplitter } from './lib/data_profiles_splitter.js'
-import { SessionMemory, StorageRepository, SyncStorageRepository } from './lib/storage_repository.js'
+import { createRoleListItem } from './lib/create_role_list_item.js';
+import { CurrentContext } from './lib/current_context.js';
+import { findTargetProfiles } from './lib/target_profiles.js';
+import { SessionMemory, SyncStorageRepository } from './lib/storage_repository.js';
+// import { remoteCallback } from './handlers/remote_connect.js';
+// import { writeProfileSetToTable } from './lib/profile_db.js';
 
-const sessionMemory = new SessionMemory(chrome || browser)
+const sessionMemory = new SessionMemory(chrome || browser);
 
 function openOptions() {
-  if (window.chrome) {
-    chrome.runtime.openOptionsPage(err => {
-      if (err) console.error(`Error: ${err}`);
-    });
-  } else if (window.browser) {
-    window.browser.runtime.openOptionsPage().catch(err => {
-      if (err) console.error(`Error: ${err}`);
-    });
-  }
+  (chrome || browser).runtime.openOptionsPage().catch(err => {
+    console.error(`Error: ${err}`);
+  });
 }
 
-function getCurrentTab() {
-  if (window.chrome) {
-    return new Promise((resolve) => {
-      chrome.tabs.query({ currentWindow:true, active:true }, tabs => {
-        resolve(tabs[0])
-      })
-    })
-  } else if (window.browser) {
-    return browser.tabs.query({ currentWindow:true, active:true }).then(tabs => tabs[0])
-  }
+function openPage(pageUrl) {
+  const brw = chrome || browser;
+  const url = brw.runtime.getURL(pageUrl);
+  brw.tabs.create({ url }).catch(err => {
+    console.error(`Error: ${err}`);
+  });
 }
 
-function executeAction(tabId, action, data) {
-  if (window.chrome) {
-    return new Promise((resolve) => {
-      chrome.tabs.sendMessage(tabId, { action, data }, {}, resolve)
-    })
-  } else if (window.browser) {
-    return browser.tabs.sendMessage(tabId, { action, data })
-  }
+async function getCurrentTab() {
+  const brw = chrome || browser;
+  const [tab] = await brw.tabs.query({ currentWindow:true, active:true });
+  return tab;
+}
+
+async function moveTabToOption(tabId) {
+  const brw = chrome || browser;
+  const url = await brw.runtime.getURL('options.html');
+  await brw.tabs.update(tabId, { url });
+}
+
+async function executeAction(tabId, action, data) {
+  return (chrome || browser).tabs.sendMessage(tabId, { action, data });
 }
 
 window.onload = function() {
@@ -48,19 +46,19 @@ window.onload = function() {
   }
 
   document.getElementById('openUpdateNoticeLink').onclick = function(e) {
-    chrome.tabs.create({ url: chrome.runtime.getURL('updated.html')}, function(tab){});
+    openPage('updated.html');
     return false;
   }
 
-  // document.getElementById('openCreditsLink').onclick = function(e) {
-  //   chrome.tabs.create({ url: chrome.runtime.getURL('credits.html')}, function(tab){});
-  //   return false;
-  // }
+  document.getElementById('openCreditsLink').onclick = function(e) {
+    openPage('credits.html');
+    return false;
+  }
 
-  // document.getElementById('openSupportersLink').onclick = document.getElementById('openSupportMe').onclick = function(e) {
-  //   chrome.tabs.create({ url: chrome.runtime.getURL('supporters.html')}, function(tab){});
-  //   return false;
-  // }
+  document.getElementById('openSupportersLink').onclick = document.getElementById('openSupportMe').onclick = function(e) {
+    openPage('supporters.html');
+    return false;
+  }
 
   const storageRepo = new SyncStorageRepository(chrome || browser);
   storageRepo.get(['visualMode']).then(({ visualMode }) => {
@@ -84,14 +82,16 @@ window.onload = function() {
 function main() {
   getCurrentTab()
     .then(tab => {
+      if (!tab.url) return;
+
       const url = new URL(tab.url)
       if (url.host.endsWith('.aws.amazon.com')
        || url.host.endsWith('.amazonaws-us-gov.com')
        || url.host.endsWith('.amazonaws.cn')) {
         executeAction(tab.id, 'loadInfo', {}).then(userInfo => {
           if (userInfo) {
-            loadFormList(url, userInfo, tab.id);
             document.getElementById('main').style.display = 'block';
+            return loadFormList(url, userInfo, tab.id);
           } else {
             const noMain = document.getElementById('noMain');
             const p = noMain.querySelector('p');
@@ -100,6 +100,20 @@ function main() {
             noMain.style.display = 'block';
           }
         })
+      } else if (url.host.endsWith('.aesr.dev') && url.pathname.startsWith('/callback')) {
+        // remoteCallback(url)
+        // .then(userCfg => {
+        //   const p = noMain.querySelector('p');
+        //   p.textContent = "Successfully connected to AESR Config Hub!";
+        //   noMain.style.display = 'block';
+        //   return writeProfileSetToTable(userCfg.profile);
+        // })
+        // .then(() => moveTabToOption(tab.id))
+        // .catch(err => {
+        //   const p = noMain.querySelector('p');
+        //   p.textContent = `Failed to connect to AESR Config Hub because.\n${err.message}`;
+        //   noMain.style.display = 'block';
+        // });
       } else {
         const p = noMain.querySelector('p');
         p.textContent = "You'll see the role list here when the current tab is AWS Management Console page.";
@@ -108,26 +122,15 @@ function main() {
     })
 }
 
-function loadFormList(curURL, userInfo, tabId) {
-  const storageRepo = new SyncStorageRepository(chrome || browser)
-  storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'configStorageArea', 'signinEndpointInHere'])
-  .then(data => {
-    const hidesAccountId = data.hidesAccountId || false;
-    const showOnlyMatchingRoles = data.showOnlyMatchingRoles || false;
-    const configStorageArea = data.configStorageArea || 'local';
-    const signinEndpointInHere = data.signinEndpointInHere || false;
+async function loadFormList(curURL, userInfo, tabId) {
+  const storageRepo = new SyncStorageRepository(chrome || browser);
+  const data = await storageRepo.get(['hidesAccountId', 'showOnlyMatchingRoles', 'signinEndpointInHere']);
+  const { hidesAccountId = false, showOnlyMatchingRoles = false, signinEndpointInHere = false } = data;
 
-    new StorageRepository(chrome || browser, configStorageArea).get(['profiles', 'profiles_1', 'profiles_2', 'profiles_3', 'profiles_4'])
-    .then(data => {
-      if (data.profiles) {
-        const dps = new DataProfilesSplitter();
-        const profiles = dps.profilesFromDataSet(data);
-        const profileSet = createProfileSet(profiles, userInfo, { showOnlyMatchingRoles });
-        renderRoleList(profileSet.destProfiles, tabId, curURL, { hidesAccountId, signinEndpointInHere });
-        setupRoleFilter();
-      }
-    })
-  });
+  const curCtx = new CurrentContext(userInfo, { showOnlyMatchingRoles });
+  const profiles = await findTargetProfiles(curCtx);
+  renderRoleList(profiles, tabId, curURL, { hidesAccountId, signinEndpointInHere });
+  setupRoleFilter();
 }
 
 function renderRoleList(profiles, tabId, curURL, options) {

@@ -1,6 +1,33 @@
 Changelog
 =========
 
+## 5.0.2 (2024/10/27)
+
+- Fix to highlight the relevant part when validation fails in the configuration textarea (thanks to @brandonkgarner)
+- Fix **Show only matching roles** when target role ARN has a path (thanks to @dblackhall-tyro)
+
+## 5.0.1 (2024/04/07)
+
+- Add support for remote retrieval of user configurations through [AESR Config Hub](https://aesr.dev/)
+
+## 4.0.3 (2023/11/27)
+
+- Implement fallback for displaying the role list in Firefox private browsing mode
+
+## 4.0.2 (2023/11/07)
+
+- Fix parsing of 'role_arn' when the role name contains slashes
+
+## 4.0.1 (2023/10/31)
+
+- Fix the switch targets to list in the order of Simple profiles, followed by Complex target profiles
+- Shorten the process of fetching user info during the loading of the AWS Management Console page
+
+## 4.0.0 (2023/10/22)
+
+- Change the storage location of profile data to **IndexedDB**, removing the registration number limit
+- Update the host specification for the AWS Management Console
+
 ## 3.0.0 (2023/06/18)
 
 - Migrate to Manifest V3 (thanks to @eetann)

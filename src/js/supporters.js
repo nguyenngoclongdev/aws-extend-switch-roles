@@ -1,6 +1,6 @@
-import { validateKeyCode } from './lib/verify_jwt'
-import { SessionMemory, SyncStorageRepository } from './lib/storage_repository'
-import { setIcon } from './lib/set_icon'
+import { validateKeyCode } from './lib/verify_jwt.js'
+import { SessionMemory, SyncStorageRepository } from './lib/storage_repository.js'
+import { setIcon } from './lib/set_icon.js'
 
 const syncStorageRepo = new SyncStorageRepository(chrome || browser)
 const sessionMemory = new SessionMemory(chrome || browser)
@@ -42,11 +42,11 @@ function setEventHandler() {
   }
 }
 
-// window.onload = function() {
-//   const textareaKeyCode = document.getElementById('textareaKeyCode');
+window.onload = function() {
+  const textareaKeyCode = document.getElementById('textareaKeyCode');
 
-//   textareaKeyCode.placeholder = `\
-// ---------- BEGIN ------ AESR GOLDEN KEY ----------
+  textareaKeyCode.placeholder = `\
+---------- BEGIN ------ AESR GOLDEN KEY ----------
   
   
   
@@ -66,14 +66,14 @@ function setEventHandler() {
   
   
   
-// ----------- END ------- AESR GOLDEN KEY ----------`;
+----------- END ------- AESR GOLDEN KEY ----------`;
 
-//   syncStorageRepo.get(['goldenKeyExpire'])
-//   .then(data => {
-//     const { goldenKeyExpire } = data;
-//     if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
-//       document.getElementById('keyCodeValid').style.display = 'block';
-//     }
-//     setEventHandler();
-//   });
-// }
+  syncStorageRepo.get(['goldenKeyExpire'])
+  .then(data => {
+    const { goldenKeyExpire } = data;
+    if ((new Date().getTime() / 1000) < Number(goldenKeyExpire)) {
+      document.getElementById('keyCodeValid').style.display = 'block';
+    }
+    setEventHandler();
+  });
+}

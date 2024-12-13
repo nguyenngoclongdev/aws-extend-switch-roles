@@ -25,7 +25,7 @@ class AutoAssumeLastRole {
     if (!this.enabled) return;
     const lastRoleKey = this.createKey();
     const value = `${profile.aws_account_id}_${profile.role_name}`;
-    chrome.storage.local.set({ [lastRoleKey]: value }, function() {
+    chrome.storage.sync.set({ [lastRoleKey]: value }, function() {
       console.log(`Saved lastRole to '${lastRoleKey}' as '${value}'`);
     });
   }
@@ -33,7 +33,7 @@ class AutoAssumeLastRole {
   clear() {
     if (!this.enabled) return;
     const lastRoleKey = this.createKey();
-    chrome.storage.local.remove(lastRoleKey, function() {
+    chrome.storage.sync.remove(lastRoleKey, function() {
       console.log(`Cleared lastRole '${lastRoleKey}'`);
     });
   }

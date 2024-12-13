@@ -15,7 +15,6 @@ This extension shows a menu of switchable roles that you can configure manually.
 ## Large Supporters
 
 <a href="https://classmethod.jp/" rel="noopener"><img alt="Classmethod, Inc." src="https://aesr.tilfin.com/supporters/img/classmethod.png" width="208" height="90"></a>
-<a href="https://www.ginkgobioworks.com/" rel="noopener"><img alt="Ginkgo Bioworks" src="https://aesr.tilfin.com/supporters/img/ginkgo-bioworks.png" width="208" height="90"></a>
 
 ## Development and Distribution Guideline
 
@@ -132,6 +131,7 @@ role_name = Entry-Role-1 ; Role for Federated Login, or User to login
 
 [Org3-BaseAccount2]
 aws_account_id = 333300000000
+aws_account_alias = mycompany
 role_name = custom_permission-set ; DO NOT set AWSReservedSSO_custom_permission-set_0123456890abcdef
 
 [Org3-Account1-Role1]
