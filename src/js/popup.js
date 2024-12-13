@@ -2,8 +2,8 @@ import { createRoleListItem } from './lib/create_role_list_item.js';
 import { CurrentContext } from './lib/current_context.js';
 import { findTargetProfiles } from './lib/target_profiles.js';
 import { SessionMemory, SyncStorageRepository } from './lib/storage_repository.js';
-// import { remoteCallback } from './handlers/remote_connect.js';
-// import { writeProfileSetToTable } from './lib/profile_db.js';
+import { remoteCallback } from './handlers/remote_connect.js';
+import { writeProfileSetToTable } from './lib/profile_db.js';
 
 const sessionMemory = new SessionMemory(chrome || browser);
 
@@ -101,19 +101,19 @@ function main() {
           }
         })
       } else if (url.host.endsWith('.aesr.dev') && url.pathname.startsWith('/callback')) {
-        // remoteCallback(url)
-        // .then(userCfg => {
-        //   const p = noMain.querySelector('p');
-        //   p.textContent = "Successfully connected to AESR Config Hub!";
-        //   noMain.style.display = 'block';
-        //   return writeProfileSetToTable(userCfg.profile);
-        // })
-        // .then(() => moveTabToOption(tab.id))
-        // .catch(err => {
-        //   const p = noMain.querySelector('p');
-        //   p.textContent = `Failed to connect to AESR Config Hub because.\n${err.message}`;
-        //   noMain.style.display = 'block';
-        // });
+        remoteCallback(url)
+        .then(userCfg => {
+          const p = noMain.querySelector('p');
+          p.textContent = "Successfully connected to AESR Config Hub!";
+          noMain.style.display = 'block';
+          return writeProfileSetToTable(userCfg.profile);
+        })
+        .then(() => moveTabToOption(tab.id))
+        .catch(err => {
+          const p = noMain.querySelector('p');
+          p.textContent = `Failed to connect to AESR Config Hub because.\n${err.message}`;
+          noMain.style.display = 'block';
+        });
       } else {
         const p = noMain.querySelector('p');
         p.textContent = "You'll see the role list here when the current tab is AWS Management Console page.";

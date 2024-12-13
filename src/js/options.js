@@ -4,8 +4,8 @@ import { loadConfigIni, saveConfigIni } from './lib/config_ini.js';
 import { ColorPicker } from './lib/color_picker.js';
 import { SessionMemory, StorageProvider } from './lib/storage_repository.js';
 import { writeProfileSetToTable } from "./lib/profile_db.js";
-// import { remoteConnect, getRemoteConnectInfo, deleteRemoteConnectInfo } from './handlers/remote_connect.js';
-// import { reloadConfig } from './lib/reload-config.js';
+import { remoteConnect, getRemoteConnectInfo, deleteRemoteConnectInfo } from './handlers/remote_connect.js';
+import { reloadConfig } from './lib/reload-config.js';
 
 function elById(id) {
   return document.getElementById(id);
@@ -25,33 +25,33 @@ window.onload = function() {
     updateRemoteFieldsState('not_shown');
   }
   elById('connectConfigHubButton').onclick = function() {
-    // const subdomain = elById('configHubDomain').value;
-    // const clientId = elById('configHubClientId').value;
-    // remoteConnect(subdomain, clientId).catch(err => {
-    //   updateMessage('remoteMsgSpan', err.message, 'warn');
-    // });
+    const subdomain = elById('configHubDomain').value;
+    const clientId = elById('configHubClientId').value;
+    remoteConnect(subdomain, clientId).catch(err => {
+      updateMessage('remoteMsgSpan', err.message, 'warn');
+    });
   }
   elById('disconnectConfigHubButton').onclick = function() {
     updateRemoteFieldsState('disconnected');
-    // deleteRemoteConnectInfo();
+    deleteRemoteConnectInfo();
   }
   elById('reloadConfigHubButton').onclick = function() {
-    // getRemoteConnectInfo().then(rci => {
-    //   if (rci && rci.subdomain && rci.clientId) {
-    //     reloadConfig(rci).then(result => {
-    //       if (result) {
-    //         updateMessage('remoteMsgSpan', "Successfully reloaded config from Hub!");
-    //       } else {
-    //         updateMessage('remoteMsgSpan', `Failed to reload because the connection expired.`, 'warn');
-    //         updateRemoteFieldsState('disconnected');
-    //       }
-    //     }).catch(e => {
-    //       updateMessage('remoteMsgSpan', `Failed to reload because ${e.message}`, 'warn');
-    //     });
-    //   } else {
-    //     updateMessage('remoteMsgSpan', `Failed to reload because the connection is broken.`, 'warn');
-    //   }
-    // });
+    getRemoteConnectInfo().then(rci => {
+      if (rci && rci.subdomain && rci.clientId) {
+        reloadConfig(rci).then(result => {
+          if (result) {
+            updateMessage('remoteMsgSpan', "Successfully reloaded config from Hub!");
+          } else {
+            updateMessage('remoteMsgSpan', `Failed to reload because the connection expired.`, 'warn');
+            updateRemoteFieldsState('disconnected');
+          }
+        }).catch(e => {
+          updateMessage('remoteMsgSpan', `Failed to reload because ${e.message}`, 'warn');
+        });
+      } else {
+        updateMessage('remoteMsgSpan', `Failed to reload because the connection is broken.`, 'warn');
+      }
+    });
   }
 
   let selection = [];
@@ -105,18 +105,18 @@ window.onload = function() {
         syncStorageRepo.set({ signinEndpointInHere: this.checked });
       }
 
-      // getRemoteConnectInfo().then(rci => {
-      //   if (rci && rci.subdomain && rci.clientId) {
-      //     elById('configHubDomain').value = rci.subdomain;
-      //     elById('configHubClientId').value = rci.clientId;
-      //     if (rci.refreshToken) {
-      //       updateRemoteFieldsState('connected');
-      //     } else {
-      //       updateRemoteFieldsState('disconnected');
-      //       updateMessage('remoteMsgSpan', "Please reconnect because your credentials have expired.", 'warn');
-      //     }
-      //   }
-      // });
+      getRemoteConnectInfo().then(rci => {
+        if (rci && rci.subdomain && rci.clientId) {
+          elById('configHubDomain').value = rci.subdomain;
+          elById('configHubClientId').value = rci.clientId;
+          if (rci.refreshToken) {
+            updateRemoteFieldsState('connected');
+          } else {
+            updateRemoteFieldsState('disconnected');
+            updateMessage('remoteMsgSpan', "Please reconnect because your credentials have expired.", 'warn');
+          }
+        }
+      });
     } else {
       signinEndpointInHereCheckBox.disabled = true;
       const schb = elById('switchConfigHubButton')

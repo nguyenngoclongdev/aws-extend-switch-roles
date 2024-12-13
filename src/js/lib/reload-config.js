@@ -1,6 +1,6 @@
-// import { OAuthClient, RefreshTokenError } from "../remote/oauth-client.js";
-// import { writeProfileSetToTable } from "./profile_db.js";
-// import { deleteRefreshTokenFromRemoteConnectInfo } from "../handlers/remote_connect.js";
+import { OAuthClient, RefreshTokenError } from "../remote/oauth-client.js";
+import { writeProfileSetToTable } from "./profile_db.js";
+import { deleteRefreshTokenFromRemoteConnectInfo } from "../handlers/remote_connect.js";
 
 export async function reloadConfig(remoteConnectInfo) {
   // const oaClient = new OAuthClient(remoteConnectInfo.subdomain, remoteConnectInfo.clientId);
