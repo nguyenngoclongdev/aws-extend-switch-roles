@@ -19,6 +19,12 @@ jobs:
               run: |
                npm install
 
+            - name: Change the access permissions
+              run: |
+               chmod +x ./bin/build.sh
+               chmod +x ./bin/archive.sh
+               chmod +x ./bin/build_test.sh
+
             - name: Bundle package
               run: |
                npm run archive
@@ -27,4 +33,5 @@ jobs:
               uses: softprops/action-gh-release@v1
               with:
                   files: |
-                    dist/chrome/aws-extend-switch-roles.zip
+                    dist/chrome/aesr-chrome-*.zip
+                    dist/firefox/aesr-firefox-*.zip
